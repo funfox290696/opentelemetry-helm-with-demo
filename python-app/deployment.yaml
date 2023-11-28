@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry-python-app
+  labels:
+    app: opentelemetry-python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opentelemetry-python-app
+  template:
+    metadata:
+      labels:
+        app: opentelemetry-python-app
+    spec:
+      containers:
+      - name: opentelemetry-python-app
+        image: duclethanh/opentelemetry-python-app:1.0.3
+        ports:
+        - containerPort: 8080
