@@ -87,9 +87,13 @@ configMap:
 config:
   exporters:
     debug: {}
-    # Will be removed in a future release.
-    # Use the debug exporter instead.
     logging: {}
+    # otlp: # Incase want to use Jaeger
+    #     endpoint: jaeger:4317
+    #     tls:
+    #       insecure: true
+    loki:
+      endpoint: http://loki:3100/loki/api/v1/push
   extensions:
     # The health_check extension is mandatory for this chart.
     # Without the health_check extension the collector will fail the readiness and liveliness probes.
@@ -153,13 +157,12 @@ config:
       traces:
         exporters:
           - debug
+          - loki
         processors:
           - memory_limiter
           - batch
         receivers:
           - otlp
-          - jaeger
-          - zipkin
 
 image:
   # If you want to use the core image `otel/opentelemetry-collector`, you also need to change `command.name` value to `otelcol`.
@@ -286,11 +289,11 @@ ports:
     protocol: TCP
 
 # Resource limits & requests. Update according to your own use case as these values might be too low for a typical deployment.
-resources: {}
-# resources:
-#   limits:
-#     cpu: 250m
-#     memory: 512Mi
+#resources: {}
+resources:
+  limits:
+    cpu: 250m
+    memory: 512Mi
 
 podAnnotations: {}
 
